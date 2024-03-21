@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<body>
+    <h1>WASM!</h1>
+<script>
+const imports = {
+    console: {
+        log: (n) => console.log(n),
+    },
+}
+
+const memory = new WebAssembly.Memory({
+  initial: 1,
+  maximum: 1,
+  shared: true,
+});
+
+fetch("module.wasm")
+.then((response) => response.arrayBuffer())
+.then((bytes) => WebAssembly.instantiate(new Uint8Array(bytes), imports))
+.then((obj) => {
+    const { instance } = obj
+    instance.exports.start
+});
+   // let mem = obj.instance.exports.memory;
+    //let [ptr, len] = obj.instance.exports.time_to_clock(2, 22);
+    //console.log(`ptr=${ptr} len=${len}`);
+    //let str = extract_string(mem, ptr, len);
+    //console.log(`out=${str}`);
+
+    // create view over wasm mem
+    // https://github.com/WebAssembly/design/issues/1231
+
+    // initialize timer
+
+    
+const e = new Date(end).getTime();
+const i = setInterval(() => {
+    const t = new Date().getTime();
+    let r = e - t;
+    if (r < 0) {
+        clearInterval(i);
+        return;
+    }
+    
+    obj.instance.exports.countdown(new BigInt(t));
+
+    let str = extract_string(obj.instance.exports.memory, 8010, 5)
+    console.log(`out=${str}`);
+}, 1000)
+
+function extract_string(mem, offset, len) {
+    const buf = new Uint8Array(mem.buffer, offset, len);
+    return str = new TextDecoder('utf8').decode(buf);   
+}
+const end = "2024-03-30T00:00:00";
+
+</script>    
+</body>
